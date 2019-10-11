@@ -38,16 +38,16 @@ function render(ctx, state) {
     y: (-GRAVITY * Math.sin(angle)) / distance
   };
 
-  // if ($$framesLeft % 10 === 0) {
-  //   console.log((angle * 180) / Math.PI);
-  //   const angleDeg = (angle * 180) / Math.PI;
-  //   debugDrawQueue.push(() => {
-  //     ctx.arc(posX, posY, 5, 0, Math.PI);
-  //     ctx.fillText(`${angleDeg.toFixed(2)}`, posX, posY);
-  //     ctx.fillText(`${gravity.y.toFixed(2)}`, posX, posY + 13);
-  //     ctx.stroke();
-  //   });
-  // }
+  if ($$framesLeft % 10 === 0) {
+    console.log((angle * 180) / Math.PI);
+    const angleDeg = (angle * 180) / Math.PI;
+    debugDrawQueue.push(() => {
+      ctx.arc(posX, posY, 5, 0, Math.PI);
+      ctx.fillText(`${angleDeg.toFixed(2)}`, posX, posY);
+      ctx.fillText(`${gravity.y.toFixed(2)}`, posX, posY + 13);
+      ctx.stroke();
+    });
+  }
 
   const newState = {
     ...state,
@@ -61,7 +61,7 @@ function render(ctx, state) {
   raf(() => {
     ctx.clearRect(0, 0, width, height);
 
-    // debugDrawQueue.forEach(fn => draw(ctx, fn));
+    debugDrawQueue.forEach(fn => draw(ctx, fn));
 
     // Planet
     draw(ctx, () => {
