@@ -2,7 +2,7 @@ import "./styles.css";
 
 const raf = requestAnimationFrame;
 
-let $$framesLeft = 100;
+let $$framesLeft = 200;
 
 const draw = (ctx, fn) => {
   ctx.save();
@@ -14,7 +14,7 @@ const draw = (ctx, fn) => {
 const RADIUS = 100;
 const SCALE = 0.1;
 
-const GRAVITY = 1000;
+const GRAVITY = 1050;
 
 const dist = (x1, y1, x2, y2) => Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
 
@@ -31,21 +31,23 @@ function render(ctx, state) {
   const { velX, velY, posX, posY } = state;
 
   const distance = dist(posX, posY, midX, midY);
-  const angle = Math.atan((posY - midY) / (posX - midX));
+  let angle = Math.atan((posY - midY) / (posX - midX));
+  angle = posX < midX ? Math.PI + angle : angle;
   const gravity = {
     x: (-GRAVITY * Math.cos(angle)) / distance,
     y: (-GRAVITY * Math.sin(angle)) / distance
   };
 
-  if ($$framesLeft % 10 === 0) {
-    console.log((angle * 180) / Math.PI);
-    debugDrawQueue.push(() => {
-      ctx.arc(posX, posY, 5, 0, Math.PI);
-      ctx.stroke();
-    });
-  }
-
-  debugDrawQueue.forEach(fn => draw(ctx, fn));
+  // if ($$framesLeft % 10 === 0) {
+  //   console.log((angle * 180) / Math.PI);
+  //   const angleDeg = (angle * 180) / Math.PI;
+  //   debugDrawQueue.push(() => {
+  //     ctx.arc(posX, posY, 5, 0, Math.PI);
+  //     ctx.fillText(`${angleDeg.toFixed(2)}`, posX, posY);
+  //     ctx.fillText(`${gravity.y.toFixed(2)}`, posX, posY + 13);
+  //     ctx.stroke();
+  //   });
+  // }
 
   const newState = {
     ...state,
@@ -58,6 +60,8 @@ function render(ctx, state) {
 
   raf(() => {
     ctx.clearRect(0, 0, width, height);
+
+    // debugDrawQueue.forEach(fn => draw(ctx, fn));
 
     // Planet
     draw(ctx, () => {
@@ -72,7 +76,7 @@ function render(ctx, state) {
       ctx.lineWidth = 3;
 
       // HEAD
-      ctx.arc(headX, headY, 6, 0, Math.PI * 2);
+      ctx.arc(headX, headY, 5, 0, Math.PI * 2);
       ctx.fill();
 
       // BODY
@@ -112,7 +116,7 @@ const ctx = $canvas.getContext("2d");
 
 render(ctx, {
   count: 0,
-  velX: 100,
+  velX: 85,
   velY: 0,
   posX: $canvas.width / 2 + 10,
   posY: $canvas.height / 2 - RADIUS - 20
